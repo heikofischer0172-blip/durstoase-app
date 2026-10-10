@@ -17,7 +17,12 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
-      - uses: android-actions/setup-android@v3
+      # Ubuntu GitHub runners already provide an Android SDK.
+      - name: Check Android SDK
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          test -d "$ANDROID_HOME"
+          ls "$ANDROID_HOME/platforms"
       - name: Install dependencies
         run: npm install --no-audit --no-fund
       - name: Build web app and Android project
