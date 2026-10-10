@@ -30,6 +30,7 @@ jobs:
           npm run build
           npx cap add android
           npx cap sync android
+          cp android-native/MainActivity.java android/app/src/main/java/de/durstoase/shop/MainActivity.java
       - name: Build debug APK
         run: |
           cd android
