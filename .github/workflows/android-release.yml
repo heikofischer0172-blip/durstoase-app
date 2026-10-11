@@ -1,4 +1,4 @@
-name: Android Play Store Bundle
+name: Durstoase Final APK
 on:
   workflow_dispatch:
 jobs:
@@ -35,7 +35,7 @@ jobs:
           npx cap add android
           npx cap sync android
           cp android-native/MainActivity.java android/app/src/main/java/de/durstoase/shop/MainActivity.java
-      - name: Build signed release AAB
+      - name: Build signed release APK
         env:
           KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
@@ -45,14 +45,14 @@ jobs:
           printf '%s' "$KEYSTORE_B64" | base64 --decode > "$RUNNER_TEMP/release.keystore"
           cd android
           chmod +x gradlew
-          ./gradlew bundleRelease \
+          ./gradlew assembleRelease \
             -Pandroid.injected.signing.store.file="$RUNNER_TEMP/release.keystore" \
             -Pandroid.injected.signing.store.password="$KEYSTORE_PASSWORD" \
             -Pandroid.injected.signing.key.alias="$KEY_ALIAS" \
             -Pandroid.injected.signing.key.password="$KEY_PASSWORD"
-      - name: Upload Play Store bundle
+      - name: Upload signed APK
         uses: actions/upload-artifact@v4
         with:
-          name: durstoase-playstore-aab
-          path: android/app/build/outputs/bundle/release/app-release.aab
+          name: durstoase-final-apk
+          path: android/app/build/outputs/apk/release/app-release.apk
           retention-days: 14
